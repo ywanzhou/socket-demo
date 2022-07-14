@@ -1,5 +1,5 @@
 import { createApp } from 'vue'
-import './style.css'
+// import './style.css'
 import './index.css'
 // 通用字体
 import 'vfonts/Lato.css'

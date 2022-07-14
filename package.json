@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "pnpm -C packages/serve start",
+    "dev": "pnpm -C packages/web dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
