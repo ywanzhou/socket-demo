@@ -1,12 +1,20 @@
 {
-  "name": "@packages/web",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "@packages/serve",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
   },
-  "keywords": [],
-  "author": "ywanzhou",
-  "license": "MIT"
+  "dependencies": {
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.0",
+    "typescript": "^4.6.4",
+    "vite": "^3.0.0",
+    "vue-tsc": "^0.38.4"
+  }
 }
