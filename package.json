@@ -1,0 +1,13 @@
+{
+  "name": "socket-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "pnpm -C packages/serve start",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "ywanzhou",
+  "license": "MIT"
+}
