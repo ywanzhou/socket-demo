@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "theme-change": "^2.1.0",
     "vue": "^3.2.37"
   },
   "devDependencies": {

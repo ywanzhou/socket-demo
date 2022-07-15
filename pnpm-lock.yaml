@@ -19,6 +19,7 @@ importers:
       naive-ui: ^2.31.0
       postcss: ^8.4.14
       tailwindcss: ^3.1.6
+      theme-change: ^2.1.0
       typescript: ^4.6.4
       unplugin-vue-components: ^0.21.1
       vfonts: ^0.0.3
@@ -26,6 +27,7 @@ importers:
       vue: ^3.2.37
       vue-tsc: ^0.38.4
     dependencies:
+      theme-change: 2.1.0
       vue: 3.2.37
     devDependencies:
       '@vicons/ionicons5': 0.12.0
@@ -1547,6 +1549,10 @@ packages:
     transitivePeerDependencies:
       - ts-node
     dev: true
+
+  /theme-change/2.1.0:
+    resolution: {integrity: sha512-D8SZJR599b39VrWCgNTINAQYjTc7XbypoIFaDT1iwbH2IHEhTb5IqWHBwXIpJWDYFtfV7FhlHUVy0PlewPYgLQ==}
+    dev: false
 
   /to-fast-properties/2.0.0:
     resolution: {integrity: sha512-/OaKK0xYrs3DmxRYqL/yDc+FxFUVYhDlXMhRmv3z915w2HF1tnN1omB354j8VUGO/hbRzyD6Y3sA7v7GS/ceog==}
