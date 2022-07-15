@@ -60,6 +60,25 @@ const handleSend = (v: string) => {
     </div>
     <InputBox v-model="message" @send="handleSend" />
   </MainContainer>
+  <div class="modal modal-open">
+    <div class="modal-box">
+      <h3 class="font-bold text-lg text-center">加入群聊</h3>
+
+      <div class="form-control w-full">
+        <label class="label">
+          <span class="label-text">请输入你的名字</span>
+        </label>
+        <input
+          type="text"
+          placeholder="your name"
+          class="input input-bordered w-full"
+        />
+      </div>
+      <div class="modal-action justify-center">
+        <label for="my-modal" class="btn px-8">进入</label>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>

@@ -31,7 +31,11 @@ const props = defineProps<Props>()
           </div>
           <!-- 消息 -->
           <div :class="['user', item.type === 'me' ? 'flex flex-col' : '']">
-            <span class="text-base-content/100">{{ item.name }}</span>
+            <span
+              class="text-base-content/100"
+              :class="item.type === 'me' ? 'self-end' : ''"
+              >{{ item.name }}</span
+            >
             <div
               class="p-2 mt-2 rounded-t max-w-192 text-base-content/100"
               :class="item.type === 'your' ? 'bg-left' : 'bg-right'"
