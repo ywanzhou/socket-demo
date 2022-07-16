@@ -26,22 +26,22 @@
 export const socketServer = io => {
   let userList = new Map()
   io.on('connection', socket => {
-    console.log('连接成功')
     // 监听加入用户加入
     socket.on('join', e => {
       userList.set(socket.id, e)
       // 加入成功后返回加入成功的事件
       socket.emit('joined', e)
+      const uList = [...userList.entries()]
       // 触发广播
       socket.broadcast.emit('welcome', {
         name: e.name,
-        number: userList.size,
+        uList,
       })
       // 自己展示加入的信息
       socket.emit('welcome', {
         ...e,
         id: socket.id,
-        number: userList.size,
+        uList,
       })
     })
 
@@ -49,6 +49,12 @@ export const socketServer = io => {
     socket.on('send', e => {
       // 接受到消息给他广播出去
       socket.broadcast.emit('message', e)
+    })
+
+    // 用户离开
+    socket.on('disconnecting', () => {
+      const bool = userList.delete(socket.id)
+      bool && socket.broadcast.emit('quit', socket.id)
     })
   })
 }

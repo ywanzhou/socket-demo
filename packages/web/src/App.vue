@@ -10,14 +10,13 @@ import { io } from 'socket.io-client'
 const socket = io('ws://192.168.0.103:5432')
 
 const chatData = ref<ChatDataItem[]>([])
-const personNumber = ref(0)
 const curUser = reactive({
   name: '',
   avatar: '',
   id: '',
 })
 const userList = ref(new Map())
-const message = ref('俺来楼')
+const message = ref('')
 
 const handleSend = (v: string) => {
   chatData.value.push({
@@ -47,14 +46,19 @@ socket.on('joined', (e: typeof curUser) => {
 })
 
 // 监听 welcome
-socket.on('welcome', ({ name, number, avatar, id }) => {
-  userList.value.set(id, { name, avatar })
+socket.on('welcome', ({ name, avatar, id, uList }) => {
+  console.log(uList)
+
+  uList.forEach((item: any[]) => {
+    const [id, value] = item
+    userList.value.set(id, value)
+  })
+
   chatData.value.push({
     type: 'tips',
     id: Math.random().toString().split('.')[1].slice(0, 10),
     content: '欢迎' + name + '加入群聊~',
   })
-  personNumber.value = number
 })
 
 // 监听消息的广播
@@ -62,12 +66,23 @@ socket.on('message', (e: any) => {
   const msg = Object.assign({}, e, { type: 'your' }) as ChatDataItem
   chatData.value.push(msg)
 })
+
+// 监听退出
+socket.on('quit', (id: string) => {
+  const user = userList.value.get(id)
+  userList.value.delete(id)
+  chatData.value.push({
+    type: 'tips',
+    id: Math.random().toString().split('.')[1].slice(0, 10),
+    content: user.name + '退出群聊~',
+  })
+})
 </script>
 
 <template>
   <MainContainer>
     <!-- 顶部栏 -->
-    <NavHeader :group-name="'甜粥铺'" :person-number="personNumber" />
+    <NavHeader :group-name="'甜粥铺'" :person-number="userList.size" />
     <!-- 内容区域 -->
     <div class="px-4">
       <ChatItem :chat-data="chatData" />
