@@ -4,14 +4,17 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start":"pnpm nodemon",
+    "start": "pnpm nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "ywanzhou",
+  "type": "module",
   "license": "MIT",
   "dependencies": {
     "express": "^4.18.1",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "socket.io": "^4.5.1",
+    "ws": "^8.8.1"
   }
 }
