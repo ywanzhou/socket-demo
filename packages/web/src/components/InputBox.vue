@@ -27,6 +27,7 @@ const handleSend = () => {
         placeholder="..."
         class="input input-bordered w-full"
         style="--tw-bg-opacity: 0.7"
+        @keyup.enter="handleSend"
       />
       <button
         class="btn btn-square"
