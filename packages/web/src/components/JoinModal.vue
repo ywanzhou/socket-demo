@@ -3,8 +3,6 @@ import { ref } from 'vue'
 const emits = defineEmits({
   // 校验 join 事件
   join: (name: string) => {
-    console.log(name)
-
     if (name) {
       return true
     } else {
