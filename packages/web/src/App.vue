@@ -1,75 +1,73 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import MainContainer from './components/MainContainer.vue'
 import NavHeader from './components/NavHeader.vue'
 import ChatItem, { ChatDataItem } from './components/ChatItem.vue'
 import InputBox from './components/InputBox.vue'
 import JoinModal, { JoinEvent } from './components/JoinModal.vue'
 import { io } from 'socket.io-client'
-const chatData = ref<ChatDataItem[]>([
-  {
-    type: 'your',
-    id: Math.random().toString().split('.')[1].slice(0, 10),
-    name: '小周',
-    avatar:
-      'https://img2.woyaogexing.com/2022/07/06/9e84ba5dd3ed54cc!400x400.jpg',
-    content: '爱你呦~小甜',
-  },
-  {
-    type: 'me',
-    id: Math.random().toString().split('.')[1].slice(0, 10),
-    name: '小甜',
-    avatar:
-      'https://img2.woyaogexing.com/2022/07/06/70751345f0ad2330!400x400.jpg',
-    content: '我也爱你呀',
-  },
-  {
-    type: 'tips',
-    id: Math.random().toString().split('.')[1].slice(0, 10),
-    content: '欢迎狗哥加入群聊~',
-  },
-  {
-    type: 'your',
-    id: Math.random().toString().split('.')[1].slice(0, 10),
-    name: '狗哥',
-    avatar:
-      'https://img2.woyaogexing.com/2022/07/05/c566ec62e7945221!400x400.jpg',
-    content: '俺老狗来也~',
-  },
-])
+// 创建 socket 实例
+const socket = io('ws://192.168.0.103:5432')
+
+const chatData = ref<ChatDataItem[]>([])
+const personNumber = ref(0)
+const curUser = reactive({
+  name: '',
+  avatar: '',
+  id: '',
+})
+const userList = ref(new Map())
 const message = ref('俺来楼')
 
 const handleSend = (v: string) => {
   chatData.value.push({
     type: 'me',
     id: Math.random().toString().split('.')[1].slice(0, 10),
-    name: '小甜',
-    avatar:
-      'https://img2.woyaogexing.com/2022/07/06/70751345f0ad2330!400x400.jpg',
+    name: curUser.name,
+    avatar: curUser.avatar,
     content: v,
+    userId: curUser.id,
   })
   message.value = ''
+  socket.emit('send', {
+    id: Math.random().toString().split('.')[1].slice(0, 10),
+    name: curUser.name,
+    avatar: curUser.avatar,
+    content: v,
+    userId: curUser.id,
+  })
 }
 const handleJoin = (e: JoinEvent) => {
-  console.log(e)
+  socket.emit('join', Object.assign({}, e))
 }
+socket.on('joined', (e: typeof curUser) => {
+  curUser.avatar = e.avatar
+  curUser.id = e.id
+  curUser.name = e.name
+})
 
-const socket = io('ws://127.0.0.1:5432')
+// 监听 welcome
+socket.on('welcome', ({ name, number, avatar, id }) => {
+  userList.value.set(id, { name, avatar })
+  chatData.value.push({
+    type: 'tips',
+    id: Math.random().toString().split('.')[1].slice(0, 10),
+    content: '欢迎' + name + '加入群聊~',
+  })
+  personNumber.value = number
+})
 
-// send a message to the server
-socket.emit('hello from client', 5, '6', { 7: Uint8Array.from([8]) })
-
-// receive a message from the server
-socket.on('hello from server', (...args: any[]) => {
-  // ...
-  console.log(args)
+// 监听消息的广播
+socket.on('message', (e: any) => {
+  const msg = Object.assign({}, e, { type: 'your' }) as ChatDataItem
+  chatData.value.push(msg)
 })
 </script>
 
 <template>
   <MainContainer>
     <!-- 顶部栏 -->
-    <NavHeader :group-name="'甜粥铺'" :person-number="3" />
+    <NavHeader :group-name="'甜粥铺'" :person-number="personNumber" />
     <!-- 内容区域 -->
     <div class="px-4">
       <ChatItem :chat-data="chatData" />
