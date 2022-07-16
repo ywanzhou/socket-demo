@@ -4,7 +4,7 @@ import MainContainer from './components/MainContainer.vue'
 import NavHeader from './components/NavHeader.vue'
 import ChatItem, { ChatDataItem } from './components/ChatItem.vue'
 import InputBox from './components/InputBox.vue'
-import JoinModal from './components/JoinModal.vue'
+import JoinModal, { JoinEvent } from './components/JoinModal.vue'
 const chatData = ref<ChatDataItem[]>([
   {
     type: 'your',
@@ -49,8 +49,8 @@ const handleSend = (v: string) => {
   })
   message.value = ''
 }
-const handleJoin = (name: string) => {
-  console.log(name)
+const handleJoin = (e: JoinEvent) => {
+  console.log(e)
 }
 </script>
 
