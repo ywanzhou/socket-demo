@@ -22,13 +22,9 @@ const emits = defineEmits({
 const name = ref('')
 const isOpen = ref(true)
 const handleJoin = () => {
-  if (!aList.length) {
-    console.warn('头像不够了~')
-    return
-  }
   // 随机头像
   const randomIndex = Math.floor(Math.random() * aList.length)
-  const avatar = aList.splice(randomIndex, 1)[0]
+  const avatar = aList[randomIndex]
 
   emits('join', { name: name.value, avatar })
   isOpen.value = false
