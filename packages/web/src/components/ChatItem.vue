@@ -5,6 +5,7 @@ export interface ChatDataItem {
   name?: string
   content: string
   avatar?: string
+  userId?: string
 }
 interface Props {
   chatData: ChatDataItem[]
