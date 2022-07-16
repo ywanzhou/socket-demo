@@ -1,12 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import avatarList from './../assets/avatar'
+export interface JoinEvent {
+  name: string
+  avatar: string
+}
+const aList = [...avatarList]
 const emits = defineEmits({
   // 校验 join 事件
-  join: (name: string) => {
-    if (name) {
+  join: (e: JoinEvent) => {
+    const { name, avatar } = e
+    if (name && avatar) {
       return true
     } else {
-      console.warn('Invalid submit event payload!')
+      console.warn('未输入名字~')
       return false
     }
   },
@@ -15,7 +22,15 @@ const emits = defineEmits({
 const name = ref('')
 const isOpen = ref(true)
 const handleJoin = () => {
-  emits('join', name.value)
+  if (!aList.length) {
+    console.warn('头像不够了~')
+    return
+  }
+  // 随机头像
+  const randomIndex = Math.floor(Math.random() * aList.length)
+  const avatar = aList.splice(randomIndex, 1)[0]
+
+  emits('join', { name: name.value, avatar })
   isOpen.value = false
 }
 </script>
