@@ -5,6 +5,7 @@ import NavHeader from './components/NavHeader.vue'
 import ChatItem, { ChatDataItem } from './components/ChatItem.vue'
 import InputBox from './components/InputBox.vue'
 import JoinModal, { JoinEvent } from './components/JoinModal.vue'
+import { io } from 'socket.io-client'
 const chatData = ref<ChatDataItem[]>([
   {
     type: 'your',
@@ -52,6 +53,17 @@ const handleSend = (v: string) => {
 const handleJoin = (e: JoinEvent) => {
   console.log(e)
 }
+
+const socket = io('ws://127.0.0.1:5432')
+
+// send a message to the server
+socket.emit('hello from client', 5, '6', { 7: Uint8Array.from([8]) })
+
+// receive a message from the server
+socket.on('hello from server', (...args: any[]) => {
+  // ...
+  console.log(args)
+})
 </script>
 
 <template>
