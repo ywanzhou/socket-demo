@@ -1,6 +1,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-const emits = defineEmits(['join'])
+const emits = defineEmits({
+  // 校验 join 事件
+  join: (name: string) => {
+    console.log(name)
+
+    if (name) {
+      return true
+    } else {
+      console.warn('Invalid submit event payload!')
+      return false
+    }
+  },
+})
+
 const name = ref('')
 const isOpen = ref(true)
 const handleJoin = () => {
@@ -22,6 +35,7 @@ const handleJoin = () => {
           placeholder="your name"
           v-model="name"
           class="input input-bordered w-full"
+          @keyup.enter="handleJoin"
         />
       </div>
       <div class="modal-action justify-center">
