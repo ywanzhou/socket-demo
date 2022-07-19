@@ -80,6 +80,7 @@ socket.on('quit', (id: string) => {
 </script>
 
 <template>
+  <!-- 外层容器 -->
   <MainContainer>
     <!-- 顶部栏 -->
     <NavHeader :group-name="'甜粥铺'" :person-number="userList.size" />
