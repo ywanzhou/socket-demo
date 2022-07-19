@@ -7,7 +7,7 @@ import InputBox from './components/InputBox.vue'
 import JoinModal, { JoinEvent } from './components/JoinModal.vue'
 import { io } from 'socket.io-client'
 // 创建 socket 实例
-const socket = io('ws://192.168.0.103:5432')
+const socket = io('ws://localhost:5432')
 
 const chatData = ref<ChatDataItem[]>([])
 const curUser = reactive({
@@ -18,24 +18,6 @@ const curUser = reactive({
 const userList = ref(new Map())
 const message = ref('')
 
-const handleSend = (v: string) => {
-  chatData.value.push({
-    type: 'me',
-    id: Math.random().toString().split('.')[1].slice(0, 10),
-    name: curUser.name,
-    avatar: curUser.avatar,
-    content: v,
-    userId: curUser.id,
-  })
-  message.value = ''
-  socket.emit('send', {
-    id: Math.random().toString().split('.')[1].slice(0, 10),
-    name: curUser.name,
-    avatar: curUser.avatar,
-    content: v,
-    userId: curUser.id,
-  })
-}
 const handleJoin = (e: JoinEvent) => {
   socket.emit('join', Object.assign({}, e))
 }
@@ -46,9 +28,7 @@ socket.on('joined', (e: typeof curUser) => {
 })
 
 // 监听 welcome
-socket.on('welcome', ({ name, avatar, id, uList }) => {
-  console.log(uList)
-
+socket.on('welcome', ({ name, uList }) => {
   uList.forEach((item: any[]) => {
     const [id, value] = item
     userList.value.set(id, value)
@@ -61,6 +41,22 @@ socket.on('welcome', ({ name, avatar, id, uList }) => {
   })
 })
 
+const handleSend = (v: string) => {
+  const obj = {
+    id: Math.random().toString().split('.')[1].slice(0, 10),
+    name: curUser.name,
+    avatar: curUser.avatar,
+    content: v,
+    userId: curUser.id,
+  }
+  // 在 chatData 中新增一条数据，表示自己发送的
+  const type: 'me' = 'me'
+  chatData.value.push(Object.assign({}, { type }, obj))
+  // 清空 input box 中的内容
+  message.value = ''
+  // 发出send事件，将消息发送出去
+  socket.emit('send', obj)
+}
 // 监听消息的广播
 socket.on('message', (e: any) => {
   const msg = Object.assign({}, e, { type: 'your' }) as ChatDataItem

@@ -30,17 +30,16 @@ export const socketServer = io => {
     socket.on('join', e => {
       userList.set(socket.id, e)
       // 加入成功后返回加入成功的事件
-      socket.emit('joined', e)
+      socket.emit('joined', Object.assign({}, e, { id: socket.id }))
       const uList = [...userList.entries()]
       // 触发广播
       socket.broadcast.emit('welcome', {
-        name: e.name,
+        ...e,
         uList,
       })
       // 自己展示加入的信息
       socket.emit('welcome', {
         ...e,
-        id: socket.id,
         uList,
       })
     })
@@ -54,6 +53,7 @@ export const socketServer = io => {
     // 用户离开
     socket.on('disconnecting', () => {
       const bool = userList.delete(socket.id)
+      // 如果有用户离开，在进行广播（因为只打开页面不进入关闭页面也会触发这个事件）
       bool && socket.broadcast.emit('quit', socket.id)
     })
   })
