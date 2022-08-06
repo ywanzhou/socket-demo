@@ -1,28 +1,3 @@
-// client
-// const socket = io('ws://127.0.0.1:5432')
-
-// // send a message to the server
-// socket.emit('hello from client', 5, '6', { 7: Uint8Array.from([8]) })
-
-// // receive a message from the server
-// socket.on('hello from server', (...args: any[]) => {
-//   // ...
-//   console.log(args)
-// })
-// server
-// export const socketServer = io => {
-//   io.on('connection', socket => {
-//     console.log('连接成功')
-//     // send a message to the client
-//     socket.emit('hello from server', 1, '2', { 3: Buffer.from([4]) })
-
-//     // receive a message from the client
-//     socket.on('hello from client', (...args) => {
-//       console.log(args)
-//       // ...
-//     })
-//   })
-// }
 export const socketServer = io => {
   let userList = new Map()
   io.on('connection', socket => {
@@ -50,6 +25,11 @@ export const socketServer = io => {
       socket.broadcast.emit('message', e)
     })
 
+    // 监听私聊消息的发送
+    socket.on('send-user', e => {
+      const sendUserId = e.sendUserId
+      socket.to(sendUserId).emit('message-user', Object.assign({}, e))
+    })
     // 用户离开
     socket.on('disconnecting', () => {
       const bool = userList.delete(socket.id)
