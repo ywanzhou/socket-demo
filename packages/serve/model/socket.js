@@ -28,7 +28,7 @@ export const socketServer = io => {
     // 监听私聊消息的发送
     socket.on('send-user', e => {
       const sendUserId = e.sendUserId
-      socket.to(sendUserId).emit('message-user', Object.assign({}, e))
+      socket.to(sendUserId).emit('message-user', e)
     })
     // 用户离开
     socket.on('disconnecting', () => {
