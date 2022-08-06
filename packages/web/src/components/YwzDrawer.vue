@@ -45,16 +45,11 @@ const emitUpdate = (v: boolean, time = 300) => {
   opacity: 0.999999;
   cursor: pointer;
   background-color: hsl(var(--nf, var(--n)) / var(--tw-bg-opacity));
-  transition-property: all;
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s;
 }
-/* 下面我们会解释这些 class 是做什么的 */
 .v-enter-active,
 .v-leave-active {
-  transition-property: all;
-  transition-duration: 0.3s;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s;
 }
 
 .v-enter-from,
