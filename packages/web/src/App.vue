@@ -5,6 +5,7 @@ import NavHeader from './components/NavHeader.vue'
 import ChatItem, { ChatDataItem } from './components/ChatItem.vue'
 import InputBox from './components/InputBox.vue'
 import JoinModal, { JoinEvent } from './components/JoinModal.vue'
+import YwzDrawer from './components/YwzDrawer.vue'
 import { io } from 'socket.io-client'
 // 创建 socket 实例
 const socket = io('ws://localhost:5432')
@@ -17,9 +18,13 @@ const curUser = reactive({
 })
 const userList = ref(new Map())
 const message = ref('')
+const drawerShow = ref(false)
 
 const handleJoin = (e: JoinEvent) => {
   socket.emit('join', Object.assign({}, e))
+}
+const handleOpenDrawer = () => {
+  drawerShow.value = true
 }
 socket.on('joined', (e: typeof curUser) => {
   curUser.avatar = e.avatar
@@ -79,7 +84,11 @@ socket.on('quit', (id: string) => {
   <!-- 外层容器 -->
   <MainContainer>
     <!-- 顶部栏 -->
-    <NavHeader :group-name="'甜粥铺'" :person-number="userList.size" />
+    <NavHeader
+      :group-name="'甜粥铺'"
+      :person-number="userList.size"
+      @more="handleOpenDrawer"
+    />
     <!-- 内容区域 -->
     <div class="px-4">
       <ChatItem :chat-data="chatData" />
@@ -87,6 +96,13 @@ socket.on('quit', (id: string) => {
     <InputBox v-model="message" @send="handleSend" />
   </MainContainer>
   <JoinModal @join="handleJoin" />
+  <YwzDrawer v-model="drawerShow">
+    <ul class="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content">
+      <!-- Sidebar content here -->
+      <li><a>Sidebar Item 1</a></li>
+      <li><a>Sidebar Item 2</a></li>
+    </ul>
+  </YwzDrawer>
 </template>
 
 <style scoped></style>
