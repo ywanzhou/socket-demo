@@ -1,9 +1,38 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 interface Props {
   groupName: string
   personNumber: number
+  userList: Map<any, any>
+  curUserId: string
+}
+interface User {
+  id: string
+  avatar: string
+  name: string
+  new: boolean
 }
 const props = defineProps<Props>()
+const emit = defineEmits(['more'])
+const handleMore = (user: User) => {
+  emit('more', user)
+}
+const users = computed<User[]>(() => {
+  const list: User[] = []
+  if (props.userList.size === 0) return []
+  props.userList.forEach((value, key) => {
+    if (key !== props.curUserId) {
+      list.push({
+        avatar: value.avatar,
+        id: key,
+        name: value.name,
+        new: value.new,
+      })
+    }
+  })
+  return list
+})
 </script>
 
 <template>
@@ -14,22 +43,18 @@ const props = defineProps<Props>()
         >{{ props.groupName }}({{ props.personNumber }})</a
       >
     </div>
-    <div class="flex-none">
-      <button class="btn btn-square btn-ghost">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          class="inline-block w-5 h-5 stroke-current"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"
-          ></path>
-        </svg>
-      </button>
+    <div class="flex-none avatar-list pr-4">
+      <div
+        class="avatar ml-1 cursor-pointer"
+        :class="item.new ? 'online' : ''"
+        @click="handleMore(item)"
+        v-for="item in users"
+        :key="item.id"
+      >
+        <div class="w-6 rounded-full">
+          <img :src="item.avatar" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
